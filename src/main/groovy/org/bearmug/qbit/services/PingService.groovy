@@ -5,11 +5,10 @@ import io.advantageous.qbit.annotation.RequestMapping
 
 @Slf4j
 @RequestMapping('/simple')
-class SimpleService {
+class PingService {
 
-    @RequestMapping('/find')
-    boolean findCorrelation() {
-        log.debug '/simple/find path call done'
+    @RequestMapping('/ping')
+    boolean ping() {
         true
     }
 }

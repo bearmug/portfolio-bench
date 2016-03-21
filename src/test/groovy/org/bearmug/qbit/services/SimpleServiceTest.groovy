@@ -4,12 +4,12 @@ import spock.lang.Specification
 
 class SimpleServiceTest extends Specification {
 
-    def '/simple/find should always return true'() {
+    def '/simple/ping should always return true'() {
         given:
-            def SimpleService service = new SimpleService()
+            def PingService service = new PingService()
 
         when:
-            def res = service.findCorrelation()
+            def res = service.ping()
 
         then:
             res
