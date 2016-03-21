@@ -1,11 +1,15 @@
 # Gradle stuff
 .gradle
 build/
+gradle/
 
 # IDE files
 .idea/
 *.iml
+*.ipr
+*.iws
 *.class
+out/
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/

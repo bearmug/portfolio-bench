@@ -1,3 +1,0 @@
-include 'service-engine'
-
-rootProject.name = 'portfolio-bench'
