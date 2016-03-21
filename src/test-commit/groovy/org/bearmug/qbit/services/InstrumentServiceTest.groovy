@@ -1,6 +1,7 @@
 package org.bearmug.qbit.services
 
 import spock.lang.Specification
+import spock.lang.Unroll
 
 class InstrumentServiceTest extends Specification {
 
@@ -15,7 +16,8 @@ class InstrumentServiceTest extends Specification {
         res
     }
 
-    def '/instrument/find return false if instrument empty/null/unavailable'() {
+    @Unroll()
+    def '/instrument/find return false if instrument is "#instrument"'() {
         given:
         def InstrumentService service = new InstrumentService()
 
