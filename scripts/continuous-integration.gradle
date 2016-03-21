@@ -1,0 +1,9 @@
+task testAcceptance(type: Test, description: 'Run acceptance test pack') {
+    testClassesDir = sourceSets.testAcceptance.output.classesDir
+    classpath = sourceSets.testAcceptance.runtimeClasspath
+}
+
+task testPerformance(type: Test, description: 'Run performance test pack') {
+    testClassesDir = sourceSets.testPerformance.output.classesDir
+    classpath = sourceSets.testPerformance.runtimeClasspath
+}

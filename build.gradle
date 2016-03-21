@@ -9,8 +9,31 @@ repositories {
     jcenter()
 }
 
-sourceSets.main.java.srcDirs = []
-sourceSets.main.groovy.srcDirs += ["src/main/java"]
+
+sourceSets {
+
+    main.java.srcDirs = []
+    main.groovy.srcDirs += ['src/main/java']
+
+    test.java.srcDirs = []
+    test.groovy.srcDirs += ['src/test-commit/java', 'src/test-commit/groovy']
+
+    testAcceptance {
+        groovy {
+            srcDirs = ['src/test-acceptance/java', 'src/test-acceptance/groovy']
+            compileClasspath += test.compileClasspath
+            runtimeClasspath += test.compileClasspath
+        }
+    }
+
+    testPerformance {
+        java {
+            srcDirs = ['src/test-performance/java', 'src/test-performance/groovy']
+            compileClasspath += test.compileClasspath
+            runtimeClasspath += test.compileClasspath
+        }
+    }
+}
 
 dependencies {
     compile 'io.advantageous.qbit:qbit-vertx:0.9.3-M1'
@@ -27,3 +50,5 @@ mainClassName = 'org.bearmug.qbit.MainService'
 task wrapper(type: Wrapper) {
     gradleVersion = '2.12'
 }
+
+apply from: 'scripts/continuous-integration.gradle'
