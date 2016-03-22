@@ -1,42 +1,42 @@
 package org.bearmug.qbit.services
 
-import com.jimmoores.quandl.DataSetRequest
-import com.jimmoores.quandl.QuandlSession
-import com.jimmoores.quandl.SearchRequest
-import com.jimmoores.quandl.SearchResult
-import com.jimmoores.quandl.TabularResult
 import io.advantageous.qbit.annotation.PathVariable
 import io.advantageous.qbit.annotation.RequestMapping
-
-
+import org.bearmug.qbit.CacheProvider
+import org.bearmug.qbit.DataProvider
+import org.bearmug.qbit.InstrumentProfile
 
 @RequestMapping('/instrument')
 class InstrumentService {
 
-    final QuandlSession session = QuandlSession.create();
-
-    final Map<String, Boolean> instruments = [:]
+    DataProvider dataProvider
+    CacheProvider cacheProvider
 
     @RequestMapping('/exists/{0}')
     boolean exists(@PathVariable String instrument) {
 
-        if (instruments.$instrument != null) {
-            return instruments.$instrument
+        // sync part
+        if (cacheProvider.exists(instrument)) {
+            return true
         }
 
-        SearchResult searchResult = session.search(
-                SearchRequest.Builder.newInstance().withQuery(instrument).build());
-        def res = searchResult.getTotalDocuments() > 0
-        instruments.$instrument = res
-
-        res
+        // convert to async
+        InstrumentProfile profile = dataProvider.find instrument
+        cacheProvider.addInstrument(instrument, profile)
+        profile.exists
     }
 
     @RequestMapping('/find/{0}/{1}')
     String find(@PathVariable String instrument, @PathVariable String format) {
 
-        TabularResult tabularResult = session.getDataSet(
-                DataSetRequest.Builder.of("${format}/${instrument}").build());
-        tabularResult.toPrettyPrintedString();
+        // sync part
+        if (cacheProvider.getInstrumentProfile(instrument)){
+            return cacheProvider.getInstrumentProfile(instrument).prettyString
+        }
+
+        // conert to async
+        InstrumentProfile profile = dataProvider.find instrument
+        cacheProvider.addInstrument(instrument, profile)
+        profile.prettyString
     }
 }
