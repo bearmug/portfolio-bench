@@ -1,26 +1,42 @@
 package org.bearmug.qbit.services
 
+import com.jimmoores.quandl.DataSetRequest
 import com.jimmoores.quandl.QuandlSession
+import com.jimmoores.quandl.SearchRequest
+import com.jimmoores.quandl.SearchResult
 import com.jimmoores.quandl.TabularResult
+import io.advantageous.qbit.annotation.PathVariable
 import io.advantageous.qbit.annotation.RequestMapping
+
 
 
 @RequestMapping('/instrument')
 class InstrumentService {
 
-    @RequestMapping('/exists')
-    boolean exists(String instrument) {
-        QuandlSession session = QuandlSession.create();
-        TabularResult tabularResult = session.getDataSet(
-                DataSetRequest.Builder.of("WIKI/${instrument}").build());
-        System.out.println(tabularResult.toPrettyPrintedString());
+    final QuandlSession session = QuandlSession.create();
+
+    final Map<String, Boolean> instruments = [:]
+
+    @RequestMapping('/exists/{0}')
+    boolean exists(@PathVariable String instrument) {
+
+        if (instruments.$instrument != null) {
+            return instruments.$instrument
+        }
+
+        SearchResult searchResult = session.search(
+                SearchRequest.Builder.newInstance().withQuery(instrument).build());
+        def res = searchResult.getTotalDocuments() > 0
+        instruments.$instrument = res
+
+        res
     }
 
-    @RequestMapping('/find')
-    boolean find(String instrument, String format) {
-        QuandlSession session = QuandlSession.create();
+    @RequestMapping('/find/{0}/{1}')
+    String find(@PathVariable String instrument, @PathVariable String format) {
+
         TabularResult tabularResult = session.getDataSet(
                 DataSetRequest.Builder.of("${format}/${instrument}").build());
-        System.out.println(tabularResult.toPrettyPrintedString());
+        tabularResult.toPrettyPrintedString();
     }
 }
