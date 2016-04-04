@@ -2,16 +2,16 @@ package org.bearmug.qbit.services
 
 import spock.lang.Specification
 
-class SimpleServiceTest extends Specification {
+class PingServiceTest extends Specification {
 
     def '/simple/ping should always return true'() {
-        given:
+        given: "PingService initialized"
             def PingService service = new PingService()
 
-        when:
+        when: "/simple/ping called"
             def res = service.ping()
 
-        then:
+        then: "success result highlighted"
             res
     }
 }
