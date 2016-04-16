@@ -22,4 +22,23 @@ class CalculatorServiceTest extends Specification {
         -1             || 1              || 0
         Long.MIN_VALUE || Long.MAX_VALUE || -1
     }
+    
+    @Unroll
+    def '/calc/mult/#a/#b multiplication "#a" and "#b" with output "#expectedRes"'() {
+        given: "CalculatorService initialized"
+        CalculatorService service = new CalculatorService()
+
+        when: "/calc/mult GET handler called"
+        long res = service.mult(a, b)
+
+        then:
+        expectedRes == res
+
+        where:
+        a              || b              || expectedRes
+        1              || 1              || 1
+        -1             || 1              || -1
+        Long.MIN_VALUE || 0              || 0
+        12             || 10             || 120
+    }
 }

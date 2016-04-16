@@ -12,6 +12,11 @@ class CalculatorService {
     long add(@PathVariable long a, @PathVariable long b) {
         a + b
     }
+    
+    @RequestMapping('/mult/{0}/{1}')
+    long mult(@PathVariable long a, @PathVariable long b) {
+        a * b
+    }
 }
 
 
