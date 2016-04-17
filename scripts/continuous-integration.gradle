@@ -13,7 +13,7 @@ task testPerformance(type: Test, description: 'Run performance test pack') {
     classpath = sourceSets.testPerformance.runtimeClasspath
 }
 
-task publishReport(type: Copy, description: 'Publish tests report to web server') {
+task report(type: Copy, description: 'Publish tests report to web server') {
     from "$buildDir/reports/tests"
     into "$reportsTargetDir"
 }
