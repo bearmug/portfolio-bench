@@ -17,3 +17,8 @@ task report(type: Copy, description: 'Publish tests report to web server') {
     from "$buildDir/reports/tests"
     into "$reportsTargetDir"
 }
+
+gatling {
+    toolVersion = '2.2.0'
+    jvmArgs = [ '-server', '-Xms128M', '-Xmx128M' ]
+}
