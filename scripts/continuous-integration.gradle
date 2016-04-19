@@ -22,3 +22,14 @@ gatling {
     toolVersion = '2.2.0'
     jvmArgs = [ '-server', '-Xms128M', '-Xmx128M' ]
 }
+
+task gatlingw(dependsOn: 'gatling') << {
+    println 'Running gatling wrapper task'
+}
+
+task simulation(dependsOn: ['startServer', 'gatlingw', 'stopServer']) << {
+    
+}
+
+gatlingw.shouldRunAfter startServer
+stopServer.mustRunAfter gatlingw

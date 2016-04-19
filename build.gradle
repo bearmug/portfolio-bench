@@ -1,9 +1,13 @@
+import com.wiredforcode.gradle.spawn.*
+
 plugins {
     id 'java'
     id 'application'
     id 'groovy'
     id 'idea'
     id 'com.github.lkishalmi.gatling' version '0.3.0'
+    id 'com.wiredforcode.spawn' version '0.6.0'
+    id 'com.github.johnrengelman.shadow' version '1.2.3'
 }
 
 repositories {
@@ -54,9 +58,23 @@ dependencies {
 
 sourceCompatibility = '1.8'
 mainClassName = 'org.bearmug.qbit.MainService'
+jar {
+    manifest {
+        attributes 'Main-Class': 'org.bearmug.qbit.MainService'
+    }
+}
+
 
 task wrapper(type: Wrapper) {
     gradleVersion = '2.12'
 }
+
+//have to put this part ofCI here because of issue (temporary) with plugins apply
+task startServer(type: SpawnProcessTask, dependsOn: 'shadowJar') {
+    command "java -jar ${projectDir}/build/libs/portfolio-bench-all.jar"
+    ready 'HttpServer Started'
+}
+
+task stopServer(type: KillProcessTask)
 
 apply from: 'scripts/continuous-integration.gradle'
