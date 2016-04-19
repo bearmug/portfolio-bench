@@ -8,7 +8,7 @@ class CalculatorServiceSimulation extends Simulation {
     
     val random = scala.util.Random
     
-    val scn = scenario("Calculator usage scenario").repeat(1) {
+    val scn = scenario("Calculator usage scenario").repeat(15) {
         
         exec(
             
@@ -25,6 +25,6 @@ class CalculatorServiceSimulation extends Simulation {
   }
 
   setUp ( 
-        scn.inject(atOnceUsers(1))
+        scn.inject(atOnceUsers(5))
   )
 }

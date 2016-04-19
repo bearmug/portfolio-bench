@@ -14,7 +14,7 @@ task testPerformance(type: Test, description: 'Run performance test pack') {
 }
 
 task report(type: Copy, description: 'Publish tests report to web server') {
-    from "$buildDir/reports/tests"
+    from "$buildDir/reports"
     into "$reportsTargetDir"
 }
 
