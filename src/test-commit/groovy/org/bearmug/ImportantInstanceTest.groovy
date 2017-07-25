@@ -7,8 +7,8 @@ class ImportantInstanceTest extends Specification {
 
     @Unroll
     def 'fibonacci number #num equals to #expectedRes'() {
-        given: "ImportantInstance initialized"
-        ImportantInstance instance = new ImportantInstance()
+        given: "FibonacciCalc initialized"
+        FibonacciCalc instance = new FibonacciCalc()
 
         when: "fibonacci calculation called"
         long res = instance.fibonacci(num)

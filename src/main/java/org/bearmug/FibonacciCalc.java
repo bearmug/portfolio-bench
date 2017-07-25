@@ -1,7 +1,7 @@
 package org.bearmug;
 
 
-public class ImportantInstance {
+public class FibonacciCalc {
 
     public int fibonacci(int base) {
         switch (base) {

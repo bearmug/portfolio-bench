@@ -5,11 +5,10 @@ plugins {
     id 'application'
     id 'groovy'
     id 'idea'
-    id 'com.github.lkishalmi.gatling' version '0.3.0'
-    id 'com.wiredforcode.spawn' version '0.6.0'
-    id 'com.github.johnrengelman.shadow' version '1.2.3'
+    id 'com.github.lkishalmi.gatling' version '0.4.1'
+    id 'com.wiredforcode.spawn' version '0.8.2'
+    id 'com.github.johnrengelman.shadow' version '2.0.1'
 }
-
 repositories {
     jcenter()
     maven {
@@ -28,7 +27,7 @@ sourceSets {
 
     testAcceptance {
         groovy {
-            srcDirs = ['src/test-acceptance/java', 'src/test-acceptance/groovy']
+            srcDirs += ['src/test-acceptance/java', 'src/test-acceptance/groovy']
             compileClasspath += test.compileClasspath
             runtimeClasspath += test.compileClasspath
         }
@@ -44,15 +43,17 @@ sourceSets {
 }
 
 dependencies {
-    compile 'io.advantageous.qbit:qbit-vertx:0.9.3-M1'
+    compile 'org.codehaus.groovy:groovy-all:2.4.12'
+    compile 'org.scala-lang:scala-library:2.11.8'
 
+    compile 'io.advantageous.qbit:qbit-vertx:1.12.0'
     compile 'ch.qos.logback:logback-core:1.1.6'
     compile 'ch.qos.logback:logback-classic:1.1.6'
-    compile 'org.slf4j:slf4j-api:1.7.19'
-    compile 'org.codehaus.groovy:groovy-all:2.4.6'
+//    compile 'org.slf4j:slf4j-api:1.7.19'
+
     testCompile 'org.spockframework:spock-core:1.0-groovy-2.4'
     testCompile 'org.codehaus.groovy.modules.http-builder:http-builder:0.7.1'
-    gatlingCompile 'io.gatling:gatling-app:2.2.0'
+    gatlingCompile 'io.gatling:gatling-app:2.2.5'
 }
 
 sourceCompatibility = '1.8'
@@ -64,15 +65,16 @@ jar {
 }
 
 
-task wrapper(type: Wrapper) {
-    gradleVersion = '4.0.1'
-}
 
 task startServer(type: SpawnProcessTask, dependsOn: 'shadowJar') {
-    command "java -jar ${projectDir}/build/libs/portfolio-bench-all.jar"
+    command "java -jar $projectDir/build/libs/portfolio-bench-all.jar"
     ready 'HttpServer Started'
 }
 
 task stopServer(type: KillProcessTask)
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '4.0.1'
+}
 
 apply from: 'scripts/continuous-integration.gradle'

@@ -1,15 +1,12 @@
 task testCommit(type: Test, description: 'Run commit test pack') {
-    testClassesDir = sourceSets.test.output.classesDir
     classpath = sourceSets.test.runtimeClasspath
 }
 
 task testAcceptance(type: Test, description: 'Run acceptance test pack') {
-    testClassesDir = sourceSets.testAcceptance.output.classesDir
     classpath = sourceSets.testAcceptance.runtimeClasspath
 }
 
 task testPerformance(type: Test, description: 'Run performance test pack') {
-    testClassesDir = sourceSets.testPerformance.output.classesDir
     classpath = sourceSets.testPerformance.runtimeClasspath
 }
 
@@ -19,17 +16,17 @@ task report(type: Copy, description: 'Publish tests report to web server') {
 }
 
 gatling {
-    toolVersion = '2.2.0'
-    jvmArgs = [ '-server', '-Xms128M', '-Xmx128M' ]
+    toolVersion = '2.2.5'
+    jvmArgs = [ '-server', '-Xms256M', '-Xmx256M' ]
 }
 
-task gatlingw(dependsOn: 'gatling') << {
-    println 'Running gatling wrapper task'
+task gatlingw(dependsOn: 'gatlingRun') {
+    doLast {
+        println 'Running gatling wrapper task'
+    }
 }
 
-task simulation(dependsOn: ['startServer', 'gatlingw', 'stopServer']) << {
-    
-}
+task simulation(dependsOn: ['startServer', 'gatlingw', 'stopServer'])
 
 gatlingw.shouldRunAfter startServer
 stopServer.mustRunAfter gatlingw
