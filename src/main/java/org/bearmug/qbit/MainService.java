@@ -2,7 +2,7 @@ package org.bearmug.qbit;
 
 
 import io.advantageous.qbit.server.EndpointServerBuilder;
-import org.bearmug.qbit.services.QbitFibonacciService;
+import org.bearmug.controller.QbitFibonacciController;
 
 
 public class MainService {
@@ -15,7 +15,7 @@ public class MainService {
         new EndpointServerBuilder()
                 .setPort(8080)
                 .build()
-                .initServices(new QbitFibonacciService())
+                .initServices(new QbitFibonacciController())
                 .start();
     }
 }

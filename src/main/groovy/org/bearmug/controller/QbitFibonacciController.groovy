@@ -1,4 +1,4 @@
-package org.bearmug.qbit.services
+package org.bearmug.controller
 
 import groovy.util.logging.Slf4j
 import io.advantageous.qbit.annotation.PathVariable
@@ -7,10 +7,10 @@ import org.bearmug.FibonacciCalc
 
 @Slf4j
 @RequestMapping('/fibonacci-qbit')
-class QbitFibonacciService {
+class QbitFibonacciController {
 
     @RequestMapping('/get/{0}')
-    boolean get(@PathVariable int base) {
-        new FibonacciCalc().fibonacci(base)
+    int get(@PathVariable int base) {
+        return new FibonacciCalc().fibonacci(base)
     }
 }

@@ -1,4 +1,4 @@
-import com.wiredforcode.gradle.spawn.*
+//import com.wiredforcode.gradle.spawn.*
 
 plugins {
     id 'java'
@@ -8,6 +8,7 @@ plugins {
     id 'com.github.lkishalmi.gatling' version '0.4.1'
     id 'com.wiredforcode.spawn' version '0.8.2'
     id 'com.github.johnrengelman.shadow' version '2.0.1'
+    id 'org.springframework.boot' version '1.5.4.RELEASE'
 }
 repositories {
     jcenter()
@@ -49,29 +50,38 @@ dependencies {
     compile 'io.advantageous.qbit:qbit-vertx:1.12.0'
     compile 'ch.qos.logback:logback-core:1.1.6'
     compile 'ch.qos.logback:logback-classic:1.1.6'
-//    compile 'org.slf4j:slf4j-api:1.7.19'
+
+    compile("org.springframework.boot:spring-boot-starter-web") {
+        exclude module: "spring-boot-starter-tomcat"
+    }
+    compile("org.springframework.boot:spring-boot-starter-jetty")
+    compile("org.springframework.boot:spring-boot-starter-actuator")
 
     testCompile 'org.spockframework:spock-core:1.0-groovy-2.4'
     testCompile 'org.codehaus.groovy.modules.http-builder:http-builder:0.7.1'
+
     gatlingCompile 'io.gatling:gatling-app:2.2.5'
 }
 
 sourceCompatibility = '1.8'
-mainClassName = 'org.bearmug.qbit.MainService'
-jar {
-    manifest {
-        attributes 'Main-Class': 'org.bearmug.qbit.MainService'
-    }
+
+bootRun {
+    addResources = true
+    mainClassName = 'org.bearmug.SpringApp'
 }
 
-
-
-task startServer(type: SpawnProcessTask, dependsOn: 'shadowJar') {
-    command "java -jar $projectDir/build/libs/portfolio-bench-all.jar"
+task startQbit(type: SpawnProcessTask, dependsOn: 'shadowJar') {
+    command "java -cp $projectDir/build/libs/portfolio-bench-all.jar org.bearmug.qbit.MainService"
     ready 'HttpServer Started'
 }
 
-task stopServer(type: KillProcessTask)
+task startBoot(type: SpawnProcessTask) {
+    command "./gradlew bootRun"
+    ready 'Started SpringApp'
+}
+
+task stopQbit(type: KillProcessTask)
+task stopBoot(type: KillProcessTask)
 
 task wrapper(type: Wrapper) {
     gradleVersion = '4.0.1'

@@ -7,8 +7,7 @@ class FrameworksSimulation extends Simulation {
 
   val random = scala.util.Random
 
-  val httpConf = http // 4
-    .baseURL("http://localhost:8080/services")
+  private val httpConf = http.baseURL("http://localhost:8080/services")
 
   private val fibonacciQbitFast = scenario("Qbit low-CPU fibonacci calculations").repeat(5) {
 
@@ -21,6 +20,6 @@ class FrameworksSimulation extends Simulation {
   }
 
   setUp(
-    fibonacciQbitFast.inject(rampUsers(5) over 10)
+    fibonacciQbitFast.inject(rampUsers(10) over 10)
   ).protocols(httpConf)
 }

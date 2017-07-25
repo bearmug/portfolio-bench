@@ -20,13 +20,14 @@ gatling {
     jvmArgs = [ '-server', '-Xms256M', '-Xmx256M' ]
 }
 
-task gatlingw(dependsOn: 'gatlingRun') {
+task gatlingQbit(dependsOn: 'gatlingRun') {
     doLast {
-        println 'Running gatling wrapper task'
+        println 'Running gatling qbit wrapper task'
     }
 }
 
-task simulation(dependsOn: ['startServer', 'gatlingw', 'stopServer'])
+task simulationQbit(dependsOn: ['startQbit', 'gatlingQbit', 'stopQbit'])
+task simulationBoot(dependsOn: ['startBoot', 'gatlingBoot', 'stopBoot'])
 
-gatlingw.shouldRunAfter startServer
-stopServer.mustRunAfter gatlingw
+gatlingQbit.shouldRunAfter startQbit
+stopQbit.mustRunAfter gatlingQbit
