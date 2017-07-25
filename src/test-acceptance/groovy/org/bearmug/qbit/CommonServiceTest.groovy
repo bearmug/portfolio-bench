@@ -3,7 +3,6 @@ package org.bearmug.qbit
 import groovyx.net.http.RESTClient
 import io.advantageous.qbit.server.EndpointServerBuilder
 import io.advantageous.qbit.server.ServiceEndpointServer
-import org.bearmug.qbit.services.CalculatorService
 import spock.lang.Shared
 import spock.lang.Specification
 

@@ -45,7 +45,6 @@ sourceSets {
 
 dependencies {
     compile 'io.advantageous.qbit:qbit-vertx:0.9.3-M1'
-    compile 'com.jimmoores:quandl:1.3.0'
 
     compile 'ch.qos.logback:logback-core:1.1.6'
     compile 'ch.qos.logback:logback-classic:1.1.6'
@@ -66,10 +65,9 @@ jar {
 
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.12'
+    gradleVersion = '4.0.1'
 }
 
-//have to put this part ofCI here because of issue (temporary) with plugins apply
 task startServer(type: SpawnProcessTask, dependsOn: 'shadowJar') {
     command "java -jar ${projectDir}/build/libs/portfolio-bench-all.jar"
     ready 'HttpServer Started'
