@@ -15,12 +15,23 @@ task report(type: Copy, description: 'Publish tests report to web server') {
     into "$reportsTargetDir"
 }
 
+def mode = "Boot"
+
 gatling {
     toolVersion = '2.2.5'
     jvmArgs = [ '-server', '-Xms256M', '-Xmx256M' ]
+    simulations = {
+        include "**/${mode}Simulation*"
+    }
 }
 
 task gatlingQbit(dependsOn: 'gatlingRun') {
+    doLast {
+        println 'Running gatling qbit wrapper task'
+    }
+}
+
+task gatlingBoot(dependsOn: 'gatlingRun') {
     doLast {
         println 'Running gatling qbit wrapper task'
     }
@@ -31,3 +42,6 @@ task simulationBoot(dependsOn: ['startBoot', 'gatlingBoot', 'stopBoot'])
 
 gatlingQbit.shouldRunAfter startQbit
 stopQbit.mustRunAfter gatlingQbit
+
+gatlingBoot.shouldRunAfter startBoot
+stopBoot.mustRunAfter gatlingBoot

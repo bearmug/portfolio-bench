@@ -3,7 +3,7 @@ package org.bearmug
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 
-class FrameworksSimulation extends Simulation {
+class QbitSimulation extends Simulation {
 
   val random = scala.util.Random
 
@@ -20,6 +20,6 @@ class FrameworksSimulation extends Simulation {
   }
 
   setUp(
-    fibonacciQbitFast.inject(rampUsers(10) over 10)
+    fibonacciQbitFast.inject(rampUsers(30) over 10)
   ).protocols(httpConf)
 }
