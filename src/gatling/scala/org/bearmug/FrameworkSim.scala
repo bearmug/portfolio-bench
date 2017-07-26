@@ -19,6 +19,16 @@ abstract class FrameworkSim(name: String, baseUrl: String, path: String) extends
 
   }
 
+  private val fibonacciHard = scenario(s"$name high-CPU fibonacci calculations").repeat(10) {
+
+    exec(
+      http("Calculate fibonacci number from 20 to 25")
+        .get(s"$path${29 + random.nextInt(6)}")
+        .check(status.is(200))
+    )
+
+  }
+
   setUp(
     fibonacciFast.inject(rampUsers(50) over 10)
   ).protocols(httpConf)
