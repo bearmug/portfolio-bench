@@ -29,6 +29,7 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-actuator")
     compile 'io.advantageous.qbit:qbit-vertx:1.12.0'
     compile 'io.vertx:vertx-web:3.0.0'
+    compile 'com.sparkjava:spark-core:2.6.0'
 
     gatlingCompile 'io.gatling:gatling-app:2.2.5'
 }

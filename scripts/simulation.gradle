@@ -24,6 +24,12 @@ task startVertxServer(type: SpawnProcessTask, dependsOn: 'shadowJar') {
     pidLockFileName 'pid-vertx.lock'
 }
 
+task startSparkServer(type: SpawnProcessTask, dependsOn: 'shadowJar') {
+    command "java -cp $projectDir/build/libs/portfolio-bench-all.jar org.bearmug.spark.SparkApp"
+    ready 'AbstractLifeCycle - STARTED'
+    pidLockFileName 'pid-spark.lock'
+}
+
 task stopBootServer(type: KillProcessTask) {
     pidLockFileName 'pid-boot.lock'
 }
@@ -36,6 +42,10 @@ task stopVertxServer(type: KillProcessTask) {
     pidLockFileName 'pid-vertx.lock'
 }
 
+task stopSparkServer(type: KillProcessTask) {
+    pidLockFileName 'pid-spark.lock'
+}
+
 task gatlingSim(dependsOn: 'gatlingRun') {
     doLast {
         println 'Running gatling wrapper task'
@@ -45,21 +55,26 @@ task gatlingSim(dependsOn: 'gatlingRun') {
 task simulationQbit(dependsOn: ['startQbitServer', 'gatlingSim', 'stopBootServer'])
 task simulationBoot(dependsOn: ['startBootServer', 'gatlingSim', 'stopQbitServer'])
 task simulationVertx(dependsOn: ['startVertxServer', 'gatlingSim', 'stopVertxServer'])
+task simulationSpark(dependsOn: ['startSparkServer', 'gatlingSim', 'stopSparkServer'])
 task simulationAll(dependsOn: [
         'startBootServer',
         'startQbitServer',
         'startVertxServer',
+        'startSparkServer',
         'gatlingSim',
         'stopBootServer',
         'stopQbitServer',
+        'stopSparkServer',
         'stopVertxServer']
 )
 
-task stopAll(dependsOn: ['stopBootServer', 'stopQbitServer', 'stopVertxServer'])
+task stopAll(dependsOn: ['stopBootServer', 'stopQbitServer', 'stopVertxServer', 'stopSparkServer'])
 
 gatlingSim.shouldRunAfter startQbitServer
 gatlingSim.shouldRunAfter startBootServer
 gatlingSim.shouldRunAfter startVertxServer
+gatlingSim.shouldRunAfter startSparkServer
 stopBootServer.mustRunAfter gatlingSim
 stopQbitServer.mustRunAfter gatlingSim
 stopVertxServer.mustRunAfter gatlingSim
+stopSparkServer.mustRunAfter gatlingSim

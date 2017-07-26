@@ -9,7 +9,7 @@ abstract class FrameworkSim(name: String, baseUrl: String, path: String) extends
 
   private val httpConf = http.baseURL(baseUrl)
 
-  private val fibonacciFast = scenario(s"$name low-CPU fibonacci calculations").repeat(5) {
+  private val fibonacciFast = scenario(s"$name low-CPU fibonacci calculations").repeat(10) {
 
     exec(
       http("Calculate fibonacci number from 5 to 10")
@@ -20,7 +20,7 @@ abstract class FrameworkSim(name: String, baseUrl: String, path: String) extends
   }
 
   setUp(
-    fibonacciFast.inject(rampUsers(10) over 10)
+    fibonacciFast.inject(rampUsers(50) over 10)
   ).protocols(httpConf)
 }
 
