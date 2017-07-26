@@ -9,7 +9,7 @@ class QbitSimulation extends Simulation {
 
   private val httpConf = http.baseURL("http://localhost:8080/services")
 
-  private val fibonacciQbitFast = scenario("Qbit low-CPU fibonacci calculations").repeat(5) {
+  private val fibonacciQbitFast = scenario("Qbit low-CPU fibonacci calculations").repeat(1) {
 
     exec(
       http("Calculate fibonacci number from 3 to 5")
@@ -20,6 +20,6 @@ class QbitSimulation extends Simulation {
   }
 
   setUp(
-    fibonacciQbitFast.inject(rampUsers(30) over 10)
+    fibonacciQbitFast.inject(rampUsers(3) over 10)
   ).protocols(httpConf)
 }

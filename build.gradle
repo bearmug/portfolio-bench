@@ -1,5 +1,3 @@
-//import com.wiredforcode.gradle.spawn.*
-
 plugins {
     id 'java'
     id 'application'
@@ -10,6 +8,7 @@ plugins {
     id 'com.github.johnrengelman.shadow' version '2.0.1'
     id 'org.springframework.boot' version '1.5.4.RELEASE'
 }
+
 repositories {
     jcenter()
     maven {
@@ -17,37 +16,9 @@ repositories {
     }
 }
 
-
-sourceSets {
-
-    main.java.srcDirs = []
-    main.groovy.srcDirs += ['src/main/java']
-
-    test.java.srcDirs = []
-    test.groovy.srcDirs += ['src/test-commit/java', 'src/test-commit/groovy']
-
-    testAcceptance {
-        groovy {
-            srcDirs += ['src/test-acceptance/java', 'src/test-acceptance/groovy']
-            compileClasspath += test.compileClasspath
-            runtimeClasspath += test.compileClasspath
-        }
-    }
-
-    testPerformance {
-        java {
-            srcDirs = ['src/test-performance/java', 'src/test-performance/groovy']
-            compileClasspath += test.compileClasspath
-            runtimeClasspath += test.compileClasspath
-        }
-    }
-}
-
 dependencies {
     compile 'org.codehaus.groovy:groovy-all:2.4.12'
     compile 'org.scala-lang:scala-library:2.11.8'
-
-    compile 'io.advantageous.qbit:qbit-vertx:1.12.0'
     compile 'ch.qos.logback:logback-core:1.1.6'
     compile 'ch.qos.logback:logback-classic:1.1.6'
 
@@ -56,9 +27,7 @@ dependencies {
     }
     compile("org.springframework.boot:spring-boot-starter-jetty")
     compile("org.springframework.boot:spring-boot-starter-actuator")
-
-    testCompile 'org.spockframework:spock-core:1.0-groovy-2.4'
-    testCompile 'org.codehaus.groovy.modules.http-builder:http-builder:0.7.1'
+    compile 'io.advantageous.qbit:qbit-vertx:1.12.0'
 
     gatlingCompile 'io.gatling:gatling-app:2.2.5'
 }
@@ -67,24 +36,7 @@ sourceCompatibility = '1.8'
 
 bootRun {
     addResources = true
-    mainClassName = 'org.bearmug.SpringApp'
+    mainClassName = 'org.bearmug.boot.BootApp'
 }
 
-task startQbit(type: SpawnProcessTask, dependsOn: 'shadowJar') {
-    command "java -cp $projectDir/build/libs/portfolio-bench-all.jar org.bearmug.qbit.MainService"
-    ready 'HttpServer Started'
-}
-
-task startBoot(type: SpawnProcessTask) {
-    command "./gradlew bootRun"
-    ready 'Started SpringApp'
-}
-
-task stopQbit(type: KillProcessTask)
-task stopBoot(type: KillProcessTask)
-
-task wrapper(type: Wrapper) {
-    gradleVersion = '4.0.1'
-}
-
-apply from: 'scripts/continuous-integration.gradle'
+apply from: 'scripts/simulation.gradle'

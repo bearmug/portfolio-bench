@@ -2,13 +2,12 @@ package org.bearmug.qbit;
 
 
 import io.advantageous.qbit.server.EndpointServerBuilder;
-import org.bearmug.controller.QbitFibonacciController;
 
 
-public class MainService {
+public class QbitApp {
 
     public static void main(String[] args) {
-        new MainService().start();
+        new QbitApp().start();
     }
 
     public void start() {

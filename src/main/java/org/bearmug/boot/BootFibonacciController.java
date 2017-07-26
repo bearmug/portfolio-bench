@@ -1,4 +1,4 @@
-package org.bearmug.controller;
+package org.bearmug.boot;
 
 import org.bearmug.FibonacciCalc;
 import org.springframework.web.bind.annotation.PathVariable;

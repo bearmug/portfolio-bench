@@ -1,12 +1,12 @@
-package org.bearmug;
+package org.bearmug.boot;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class SpringApp {
+public class BootApp {
 
     public static void main(String[] args) {
-        SpringApplication.run(SpringApp.class, args);
+        SpringApplication.run(BootApp.class, args);
     }
 }

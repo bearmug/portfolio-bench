@@ -1,0 +1,46 @@
+def mode = "Boot"
+
+gatling {
+    toolVersion = '2.2.5'
+    jvmArgs = [ '-server', '-Xms512M', '-Xmx512M' ]
+    simulations = {
+        include "**/${mode}Simulation*"
+    }
+}
+
+task gatlingQbit(dependsOn: 'gatlingRun') {
+    doLast {
+        println 'Running gatling qbit wrapper task'
+    }
+}
+
+task gatlingBoot(dependsOn: 'gatlingRun') {
+    doLast {
+        println 'Running gatling qbit wrapper task'
+    }
+}
+
+task startQbit(type: SpawnProcessTask, dependsOn: 'shadowJar') {
+    command "java -cp $projectDir/build/libs/portfolio-bench-all.jar org.bearmug.qbit.QbitApp"
+    ready 'HttpServer Started'
+}
+
+task startBoot(type: SpawnProcessTask) {
+    command "./gradlew bootRun"
+    ready 'Started BootApp'
+}
+
+task stopServer(type: KillProcessTask)
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '4.0.1'
+}
+
+task simulationQbit(dependsOn: ['startQbit', 'gatlingQbit', 'stopServer'])
+task simulationBoot(dependsOn: ['startBoot', 'gatlingBoot', 'stopServer'])
+
+gatlingQbit.shouldRunAfter startQbit
+stopServer.shouldRunAfter gatlingQbit
+
+gatlingBoot.shouldRunAfter startBoot
+stopServer.shouldRunAfter gatlingBoot
