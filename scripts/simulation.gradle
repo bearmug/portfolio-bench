@@ -1,46 +1,65 @@
-def mode = "Boot"
-
 gatling {
     toolVersion = '2.2.5'
     jvmArgs = [ '-server', '-Xms512M', '-Xmx512M' ]
-    simulations = {
-        include "**/${mode}Simulation*"
-    }
+//    simulations = {
+//        include "**/*Simulation.scala"
+//    }
 }
 
-task gatlingQbit(dependsOn: 'gatlingRun') {
-    doLast {
-        println 'Running gatling qbit wrapper task'
-    }
-}
-
-task gatlingBoot(dependsOn: 'gatlingRun') {
-    doLast {
-        println 'Running gatling qbit wrapper task'
-    }
-}
-
-task startQbit(type: SpawnProcessTask, dependsOn: 'shadowJar') {
+task startQbitServer(type: SpawnProcessTask, dependsOn: 'shadowJar') {
     command "java -cp $projectDir/build/libs/portfolio-bench-all.jar org.bearmug.qbit.QbitApp"
     ready 'HttpServer Started'
+    pidLockFileName 'pid-qbit.lock'
 }
 
-task startBoot(type: SpawnProcessTask) {
+task startBootServer(type: SpawnProcessTask) {
     command "./gradlew bootRun"
     ready 'Started BootApp'
+    pidLockFileName 'pid-boot.lock'
 }
 
-task stopServer(type: KillProcessTask)
-
-task wrapper(type: Wrapper) {
-    gradleVersion = '4.0.1'
+task startVertxServer(type: SpawnProcessTask, dependsOn: 'shadowJar') {
+    command "java -cp $projectDir/build/libs/portfolio-bench-all.jar org.bearmug.vertx.VertxApp"
+    ready 'Started VertxApp'
+    pidLockFileName 'pid-vertx.lock'
 }
 
-task simulationQbit(dependsOn: ['startQbit', 'gatlingQbit', 'stopServer'])
-task simulationBoot(dependsOn: ['startBoot', 'gatlingBoot', 'stopServer'])
+task stopBootServer(type: KillProcessTask) {
+    pidLockFileName 'pid-boot.lock'
+}
 
-gatlingQbit.shouldRunAfter startQbit
-stopServer.shouldRunAfter gatlingQbit
+task stopQbitServer(type: KillProcessTask) {
+    pidLockFileName 'pid-qbit.lock'
+}
 
-gatlingBoot.shouldRunAfter startBoot
-stopServer.shouldRunAfter gatlingBoot
+task stopVertxServer(type: KillProcessTask) {
+    pidLockFileName 'pid-vertx.lock'
+}
+
+task gatlingSim(dependsOn: 'gatlingRun') {
+    doLast {
+        println 'Running gatling wrapper task'
+    }
+}
+
+task simulationQbit(dependsOn: ['startQbitServer', 'gatlingSim', 'stopBootServer'])
+task simulationBoot(dependsOn: ['startBootServer', 'gatlingSim', 'stopQbitServer'])
+task simulationVertx(dependsOn: ['startVertxServer', 'gatlingSim', 'stopVertxServer'])
+task simulationAll(dependsOn: [
+        'startBootServer',
+        'startQbitServer',
+        'startVertxServer',
+        'gatlingSim',
+        'stopBootServer',
+        'stopQbitServer',
+        'stopVertxServer']
+)
+
+task stopAll(dependsOn: ['stopBootServer', 'stopQbitServer', 'stopVertxServer'])
+
+gatlingSim.shouldRunAfter startQbitServer
+gatlingSim.shouldRunAfter startBootServer
+gatlingSim.shouldRunAfter startVertxServer
+stopBootServer.mustRunAfter gatlingSim
+stopQbitServer.mustRunAfter gatlingSim
+stopVertxServer.mustRunAfter gatlingSim
